@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pesan Khusus - Kontrol Musik</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ------------------------------------------- */
+        /* PENGATURAN TEMA BACKGROUND */
+        /* ------------------------------------------- */
+        body { 
+            background-image: url('latar_lucu.jpg'); 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed;
+            
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            margin-top: 50px; 
+            padding: 20px;
+        }
+
+        /* Memberi kontras pada teks */
+        h2, p {
+            color: #1a1a1a; 
+            background-color: rgba(255, 255, 255, 0.85); 
+            padding: 5px 15px;
+            border-radius: 5px;
+            display: inline-block; 
+        }
+        
+        h2 {
+            color: #ff69b4; 
+        }
+
+        /* GAYA TOMBOL KONTROL BARU */
+        .music-controls {
+            margin: 20px auto;
+        }
+        .music-controls button {
+            background-color: #ffd700; /* Warna Emas */
+            color: #333;
+            border: 1px solid #ffcc00;
+            margin: 0 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        /* GAYA TOMBOL UTAMA */
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: transform 0.1s;
+        }
+        
+        #btn1 {
+            background-color: #ffc0cb; 
+            color: #a00040;
+            border: 2px solid #ff69b4;
+        }
+        #btn2 {
+            background-color: #add8e6; 
+            color: #00008b;
+            border: 2px solid #87ceeb;
+        }
+
+        #hasil_respons {
+            font-size: 22px;
+            margin-top: 40px;
+            padding: 20px;
+            border: 4px dashed #ff69b4; 
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #e0007d; 
+            font-weight: bold;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="seandainya.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung audio background.
+    </audio>
+
+    <div class="music-controls">
+        <p>Kontrol Musik:</p>
+        <button onclick="playMusic()">▶️ Putar Musik</button>
+        <button onclick="pauseMusic()">⏸️ Jeda Musik</button>
+    </div>
+    
+    <h2>Pesan Khusus</h2>
+    <p>Pertama kali aku ngeliat kamu aku merasa bahwa kamu berbeda dari wanita yang lain yang pernah ku temui</p>
+    <p>maukah kamu jadi pacarku</p>
+
+    <button id="btn1" onclick="tampilkanRespon(1)">Iya aku mau</button>
+    <button id="btn2" onclick="tampilkanRespon(2)">Mau bangett</button>
+
+    <p id="hasil_respons">Jawabanmu akan muncul di sini setelah menekan tombol.</p>
+    
+    <script>
+        // FUNGSI BARU UNTUK KONTROL MUSIK
+        function playMusic() {
+            let music = document.getElementById("bgMusic");
+            music.play();
+        }
+
+        function pauseMusic() {
+            let music = document.getElementById("bgMusic");
+            music.pause();
+        }
+        
+        // FUNGSI UNTUK MERESPON PILIHAN (Sekarang fungsi ini TIDAK perlu memaksa putar musik)
+        function tampilkanRespon(pilihan) {
+            let respon = "";
+
+            if (pilihan === 1) {
+                respon = "Aku senang mendengarnya! Ini awal yang baru untuk kita berdua. Terima kasih sudah menerima perasaanku! ❤️";
+            } else if (pilihan === 2) {
+                respon = "WOOW! 'Mau Banget' adalah jawaban terbaik yang pernah ada! Kita akan membuat cerita indah. ✨";
+            }
+            
+            document.getElementById("hasil_respons").innerHTML = respon;
+        }
+    </script>
+
+</body>
+</html>
