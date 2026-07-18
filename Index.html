@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Spesial Untukmu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #fff;
+            position: relative;
+            background-color: #0f1026; /* Warna dasar gelap */
+        }
+
+        /* Pembungkus Background Pegunungan Awal dengan Efek Bergerak */
+        .bg-container {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            /* Gambar Pegunungan Malam Estetik Awal */
+            background: url('https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            /* Animasi Bergerak Menggeser & Zoom Perlahan */
+            animation: moveBg 25s ease-in-out infinite alternate;
+        }
+
+        /* Lapisan Gelap di Atas Background Agar Teks Lebih Terbaca */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(15, 16, 38, 0.55), rgba(40, 25, 45, 0.65));
+            z-index: 2;
+        }
+
+        /* Bingkai Kotak Transparan Melayang (Sesuai Video) */
+        .bg-glow {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            transform: rotate(30deg);
+            pointer-events: none;
+            animation: floatGlow 6s ease-in-out infinite alternate;
+            z-index: 3;
+        }
+        .g1 { top: 12%; left: 8%; animation-delay: 0s; }
+        .g2 { top: 8%; right: 12%; width: 45px; height: 45px; animation-delay: 1.5s; }
+        .g3 { bottom: 40%; right: 10%; animation-delay: 3s; }
+        .g4 { bottom: 25%; left: 10%; width: 55px; height: 55px; animation-delay: 4.5s; }
+
+        .screen {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* SCREEN 1: Surat Awal Bergaya Kartu Putih */
+        .card-envelope {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: pulseCard 2s ease-in-out infinite;
+            border: 4px solid #fbcfe8;
+        }
+        .card-envelope:active {
+            transform: scale(0.95);
+        }
+        .card-envelope h2 {
+            color: #db2777;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .heart-pop {
+            font-size: 28px;
+            margin-bottom: 10px;
+            animation: heartBeat 1.2s infinite;
+        }
+
+        /* KOTAK FRAME KACA TRANSPARAN (Untuk Game, Kado) */
+        .neon-frame {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 28px 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .neon-frame h3 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* GRID PERMAINAN KARTU */
+        .grid-memory {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+        .card-item {
+            aspect-ratio: 1 / 1;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: #fff;
+            transition: transform 0.2s;
+        }
+        .card-item.flipped {
+            background: #ffffff;
+            color: #000;
+            transform: rotateY(180deg);
+        }
+        .card-item.matched {
+            background: #ffffff;
+            border-color: #34d399;
+            pointer-events: none;
+        }
+
+        /* TOMBOL UTAMA */
+        .btn-action {
+            background: linear-gradient(135deg, #f43f5e, #be185d);
+            color: white;
+            border: none;
+            padding: 13px 35px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.4);
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        /* SCREEN 4: KOTAK TEKS AKHIR TRANSPARAN GLASSMORPHISM */
+        .white-message-card {
+            background: rgba(255, 255, 255, 0.15); /* Transparan */
+            backdrop-filter: blur(20px); /* Efek Kaca Buram mewah */
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff; /* Mengubah teks jadi putih agar terbaca jelas */
+            padding: 30px 25px;
+            border-radius: 24px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            min-height: 320px;
+            text-align: left;
+        }
+        .avatar-gif-box {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 5px;
+        }
+        .avatar-gif-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        .text-typing {
+            font-size: 15px;
+            line-height: 1.7;
+            white-space: pre-line;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        /* ANIMASI */
+        @keyframes moveBg {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.06) translate(-15px, -10px); }
+            100% { transform: scale(1.03) translate(15px, 10px); }
+        }
+        @keyframes floatGlow {
+            0% { transform: rotate(30deg) translateY(0); }
+            100% { transform: rotate(45deg) translateY(-15px); }
+        }
+        @keyframes pulseCard {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+    <div class="bg-glow g3"></div>
+    <div class="bg-glow g4"></div>
+
+    <audio id="backSound" loop>
+        <source src="gurau.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="sc1" class="screen">
+        <div class="card-envelope" onclick="startApp()">
+            <div class="heart-pop"></div>
+            <h2>Haii Brother! ✨</h2>
+        </div>
+    </div>
+
+    <div id="sc2" class="screen hidden">
+        <div class="neon-frame">
+            <h3>Memory Game for You 🎁</h3>
+            <p style="font-size: 12px; opacity: 0.85; margin-top: 5px;">Coba Balik 2 Kartu yang Sama! 🥰</p>
+            <div class="grid-memory" id="gridBox"></div>
+        </div>
+    </div>
+
+    <div id="sc3" class="screen hidden">
+        <div class="neon-frame">
+            <h3>Special for You ✨</h3>
+            <div style="font-size: 80px; margin: 20px 0; animation: heartBeat 1.5s infinite;">🎁</div>
+            <p style="font-size: 13px; opacity: 0.9; line-height: 1.6;">Coba buka pesan ini yaa <br>Aku punya sesuatu buat kamu </p>
+            <button class="btn-action" onclick="showFinalMessage()">Buka Kado 🎁</button>
+        </div>
+    </div>
+
+    <di id="sc4" class="screen hidden">
+        <div class="white-message-card">
+            <div class="avatar-gif-box">
+                <img src="panda.gif" id="pandaImg" alt="Panda Cute">
+            </div>
+            <div class="text-typing" id="typeArea"></div>
+        </div>
+    </div>
+
+    <script>
+        const musik = document.getElementById('backSound');
+        const kumpulanSimbol = ['😊', '❤️', '🌸', '💭', '🎁', '⭐', '😊', '❤️', '🌸', '💭', '🎁', '⭐'];
+        let kartuTerbuka = [];
+        let totalCocok = 0;
+
+        const isiSurat = `Haii Nan,\n\nAku tahu belakangan ini semuanya terasa begitu berat buat kamu.\n\n Rasanya seolah-olah seluruh dunia lagi menguji batas kesabaranmu. Tapi tolong ingat, badai ini datang bukan untuk menghancurkanmu, melainkan untuk menunjukkan seberapa kuat kamu sebenarnya.\n\n 
+“You have survived 100% of your hardest days. You are far more resilient than the problems you are facing, and this chapter of your life will not break you.”
+Pelan-pelan saja ya, jalani hari demi hari... \nSemoga ke depannya jalanmu selalu dimudahkan  `;
+
+        function startApp() {
+            musik.play().catch(() => console.log("Musik aktif setelah interaksi."));
+            changeScreen('sc1', 'sc2');
+            buildGrid();
+        }
+
+        function changeScreen(oldId, newId) {
+            document.getElementById(oldId).classList.add('hidden');
+            document.getElementById(newId).classList.remove('hidden');
+        }
+
+        function buildGrid() {
+            const box = document.getElementById('gridBox');
+            kumpulanSimbol.sort(() => 0.5 - Math.random());
+            box.innerHTML = '';
+            
+            kumpulanSimbol.forEach((simbol) => {
+                const item = document.createElement('div');
+                item.classList.add('card-item');
+                item.dataset.symbol = simbol;
+                item.innerText = '?';
+                item.addEventListener('click', flipCard);
+                box.appendChild(item);
+            });
+        }
+
+        function flipCard() {
+            if (kartuTerbuka.length === 2 || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+
+            this.classList.add('flipped');
+            this.innerText = this.dataset.symbol;
+            kartuTerbuka.push(this);
+
+            if (kartuTerbuka.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            const [k1, k2] = kartuTerbuka;
+            if (k1.dataset.symbol === k2.dataset.symbol) {
+                k1.classList.add('matched');
+                k2.classList.add('matched');
+                totalCocok += 2;
+                if (totalCocok === kumpulanSimbol.length) {
+                    setTimeout(() => changeScreen('sc2', 'sc3'), 800);
+                }
+            } else {
+                k1.classList.remove('flipped');
+                k2.classList.remove('flipped');
+                k1.innerText = '?';
+                k2.innerText = '?';
+            }
+            kartuTerbuka = [];
+        }
+
+        function showFinalMessage() {
+            changeScreen('sc3', 'sc4');
+            typeWriter(isiSurat, 'typeArea', 55);
+        }
+
+        function typeWriter(teks, elemenId, kecepatan) {
+            let index = 0;
+            const target = document.getElementById(elemenId);
+            function jalan() {
+                if (index < teks.length) {
+                    target.innerHTML += teks.charAt(index);
+                    index++;
+                    setTimeout(jalan, kecepatan);
+                }
+            }
+            jalan();
+        }
+    </script>
+</body>
+</html>
